@@ -93,7 +93,7 @@ public class Dijkstra {
         return ret;
     }
 
-    public static Solution shortestPathFromStartToEndDijkstra(int[][] graph, int start, int end) {
+    public static Solution shortestPathFromStartToEnd(int[][] graph, int start, int end) {
         return dijkstra(graph, start, end);
     }
 }

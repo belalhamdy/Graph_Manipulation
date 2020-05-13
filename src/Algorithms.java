@@ -31,7 +31,7 @@ public class Algorithms {
         }
         switch (algorithmType){
             case DIJKSTRA:
-                solution = Dijkstra.shortestPathFromStartToEndDijkstra(graph,start.getValue(),end.getValue());
+                solution = Dijkstra.shortestPathFromStartToEnd(graph,start.getValue(),end.getValue());
                 break;
             case MAXIMUM_FLOW:
                 solution = null;
