@@ -9,7 +9,7 @@ public class Dijkstra {
     // using adjacency matrix
     // representation
     // Returns Solution (Nodes and path cost)
-    private static Solution dijkstra(int[][] graph, int startVertex, int endVertex) {
+    public static Solution shortestPathFromStartToEnd(int[][] graph, int startVertex, int endVertex) {
         int nVertices = graph[0].length;
 
         // shortestDistances[i] will hold the
@@ -93,7 +93,4 @@ public class Dijkstra {
         return ret;
     }
 
-    public static Solution shortestPathFromStartToEnd(int[][] graph, int start, int end) {
-        return dijkstra(graph, start, end);
-    }
 }
