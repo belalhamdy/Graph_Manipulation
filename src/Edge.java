@@ -1,7 +1,7 @@
 public class Edge {
     int from, to,cost;
     public enum GraphType{
-        directed,undirected
+        DIRECTED,UNDIRECTED
     }
     Edge(Node from, Node to, int cost, GraphType type) throws Exception {
         this.from = from.getValue();
@@ -17,7 +17,7 @@ public class Edge {
         if (cost <= 0 )
             throw new Exception("Cost is positive number only.");
         if (this.from >= Constants.MAX_VERTICES || this.to >= Constants.MAX_VERTICES)
-            throw new Exception("Please enter a value between 0 and " + Constants.MAX_VERTICES + ".");
+            throw new Exception("Please enter a value between 0 and " + Constants.MAX_VERTICES + "(Exclusive).");
     }
 
 }

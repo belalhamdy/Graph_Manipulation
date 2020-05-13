@@ -2,35 +2,45 @@ import java.util.List;
 
 public class Algorithms {
     public enum AlgorithmType {
-            Dijkstra, MaximumFlow
+            DIJKSTRA, MAXIMUM_FLOW
     }
-    public static List<Edge> executeAlgorithm(List<Edge> edges, Edge.GraphType graphType, AlgorithmType algorithmType) throws Exception {
+    private static Utils.RepeatEdgesType getProperRepeatedEdgeType(AlgorithmType algorithmType) throws Exception {
+        switch (algorithmType){
+            case DIJKSTRA:
+                return Utils.RepeatEdgesType.MINIMUM; // take minimum cost if dijkstra
+            case MAXIMUM_FLOW:
+                return Utils.RepeatEdgesType.MAXIMUM; // take minimum cost if max flow
+            default:
+                throw new Exception("Unsupported Algorithm is selected.");
+        }
+    }
+    public static List<Edge> executeAlgorithm(List<Edge> edges, Node start, Node end, Edge.GraphType graphType, AlgorithmType algorithmType) throws Exception {
         int[][] graph;
-        List<Edge> edgesResult;
+        Solution solution;
+        Utils.RepeatEdgesType repeatEdgesType = getProperRepeatedEdgeType(algorithmType);
+
         switch (graphType){
-            case directed:
-                graph = Utils.directedEdgesToGraph(edges);
+            case DIRECTED:
+                graph = Utils.directedEdgesToGraph(edges,repeatEdgesType);
                 break;
-            case undirected:
-                graph = Utils.undirectedEdgesToGraph(edges);
+            case UNDIRECTED:
+                graph = Utils.undirectedEdgesToGraph(edges,repeatEdgesType);
                 break;
             default:
                 throw new Exception("Unsupported Graph type.");
         }
         switch (algorithmType){
-            case Dijkstra:
-                // TODO: Pass Graph to dijkstra and fill edgesResult with List<Edge>
-                edgesResult = null;
+            case DIJKSTRA:
+                solution = Dijkstra.shortestPathFromStartToEndDijkstra(graph,start.getValue(),end.getValue());
                 break;
-            case MaximumFlow:
-                // TODO: Pass Graph to Max Flow and fill edgesResult with List<Edge>
-                edgesResult = null;
+            case MAXIMUM_FLOW:
+                solution = null;
                 break;
             default:
                 throw new Exception("Unsupported Algorithm is selected.");
         }
         // TODO: Think about returning drawing edge rather than edge
-        return edgesResult;
+        return null;
     }
 
 
