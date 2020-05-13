@@ -2,9 +2,9 @@ import java.util.List;
 
 public class Solution {
     List<Node> nodes;
-    int cost;
-    Solution(List<Node> nodes, int cost){
+    int solutionCost;
+    Solution(List<Node> nodes, int solutionCost){
         this.nodes = nodes;
-        this.cost = cost;
+        this.solutionCost = solutionCost;
     }
 }
