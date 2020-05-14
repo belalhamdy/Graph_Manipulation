@@ -10,4 +10,6 @@ public class Constants {
     public static final Color VISITED_NODE_COLOR = Color.YELLOW;
     public static final Color NORMAL_EDGE_COLOR = Color.PINK;
     public static final Color VISITED_EDGE_COLOR = Color.GREEN;
+
+
 }
