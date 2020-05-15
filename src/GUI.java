@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+@SuppressWarnings("rawtypes")
 public class GUI {
     private JPanel mainPnl;
     private JRadioButton directedRadio;
@@ -11,12 +14,12 @@ public class GUI {
     private JButton fordFulkersonMaximumFlowButton;
     private JTable edgesTable;
     private JTextArea resultsTxt;
+    private JScrollPane graphPnl;
 
     public GUI() {
         JFrame form = new JFrame("Graph Manipulation");
-        form.setMaximumSize(new Dimension(700, 800));
-        form.setPreferredSize(new Dimension(600, 500));
-        form.setResizable(true);
+        form.setMinimumSize(new Dimension(1100, 700));
+        form.setResizable(false);
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
         form.pack();
@@ -32,6 +35,30 @@ public class GUI {
         bG.add(undirectedRadio);
         directedRadio.setSelected(true);
 //        --------------------------------------------------------
+        graphPnl.setPreferredSize(new Dimension(200,-1));
+        graphPnl.setMaximumSize(new Dimension(200, -1));
+        graphPnl.setMaximumSize(new Dimension(200, -1));
+//        --------------------------------------------------------
+        dijkstraShortestPathButton.addActionListener(e -> {
+            try {
+                handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.DIJKSTRA);
+            } catch (Exception ex) {
+                showErrorMessage("Dijkstra",ex.getMessage());
+            }
+        });
+        fordFulkersonMaximumFlowButton.addActionListener(e -> {
+            try {
+                handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.MAXIMUM_FLOW);
+            } catch (Exception ex) {
+                showErrorMessage("Ford-Fulkerson",ex.getMessage());
+            }
+        });
+//        --------------------------------------------------------
 
+    }
+    private void showErrorMessage(String title,String message){
+        JOptionPane.showMessageDialog(null, message, "Error in " + title, JOptionPane.ERROR_MESSAGE);
+    }
+    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception{
     }
 }
