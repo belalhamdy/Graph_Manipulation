@@ -1,58 +1,39 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dijkstra {
+public class Dijkstra implements IAlgorithm {
+    int[][] graph;
+    int start, end;
 
-    // Function that implements Dijkstra's
-    // single source shortest path
-    // algorithm for a graph represented
-    // using adjacency matrix
-    // representation
-    // Returns Solution (Nodes and path cost)
-    public static Solution shortestPathFromStartToEnd(int[][] graph, int startVertex, int endVertex) {
-        int nVertices = graph[0].length;
+    int[] shortestDistances, parents;
+    boolean[] added;
 
-        // shortestDistances[i] will hold the
-        // shortest distance from src to i
-        int[] shortestDistances = new int[nVertices];
+    Dijkstra(int[][] graph, int start, int end) {
+        this.graph = graph;
+        this.start = start;
+        this.end = end;
+    }
 
-        // added[i] will true if vertex i is
-        // included / in shortest path tree
-        // or shortest distance from src to
-        // i is finalized
-        boolean[] added = new boolean[nVertices];
+    private void init() {
+        parents = new int[Constants.MAX_VERTICES];
+        parents[start] = Constants.NO_PARENT;
 
-        // Initialize all distances as
-        // INFINITE and added[] as false
-        for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+        shortestDistances = new int[Constants.MAX_VERTICES];
+        added = new boolean[Constants.MAX_VERTICES];
+
+        for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
             shortestDistances[vertexIndex] = Integer.MAX_VALUE;
             added[vertexIndex] = false;
         }
 
-        // Distance of source vertex from
-        // itself is always 0
-        shortestDistances[startVertex] = 0;
+        shortestDistances[start] = 0;
+    }
 
-        // Parent array to store shortest
-        // path tree
-        int[] parents = new int[nVertices];
-
-        // The starting vertex does not
-        // have a parent
-        parents[startVertex] = Constants.NO_PARENT;
-
-        // Find shortest path for all
-        // vertices
-        for (int i = 1; i < nVertices; i++) {
-
-            // Pick the minimum distance vertex
-            // from the set of vertices not yet
-            // processed. nearestVertex is
-            // always equal to startNode in
-            // first iteration.
+    public void fillShortestDistancesArray() {
+        for (int i = 1; i < Constants.MAX_VERTICES; i++) {
             int nearestVertex = -1;
             int shortestDistance = Integer.MAX_VALUE;
-            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+            for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
                 if (!added[vertexIndex] &&
                         shortestDistances[vertexIndex] <
                                 shortestDistance) {
@@ -60,15 +41,9 @@ public class Dijkstra {
                     shortestDistance = shortestDistances[vertexIndex];
                 }
             }
-
-            // Mark the picked vertex as
-            // processed
             added[nearestVertex] = true;
 
-            // Update dist value of the
-            // adjacent vertices of the
-            // picked vertex.
-            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+            for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
 
                 int edgeDistance = graph[nearestVertex][vertexIndex];
 
@@ -79,18 +54,22 @@ public class Dijkstra {
             }
         }
 
-        // handles result
-        return new Solution(getPath(endVertex, parents), shortestDistances[endVertex]);
     }
 
     // gets the nodes in path
-    private static List<Node> getPath(int currentVertex, int[] parents) {
+    private List<Node> getPathNodes(int currentVertex) {
         if (currentVertex == Constants.NO_PARENT)
             return new ArrayList<>();
 
-        List<Node> ret = getPath(parents[currentVertex], parents);
+        List<Node> ret = getPathNodes(parents[currentVertex]);
         ret.add(new Node(currentVertex));
         return ret;
     }
 
+    @Override
+    public Solution getSolution() {
+        init();
+        fillShortestDistancesArray();
+        return new Solution(getPathNodes(end), shortestDistances[end]);
+    }
 }
