@@ -1,26 +1,25 @@
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout2;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.Context;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import org.apache.commons.collections15.Transformer;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.function.Function;
 
 @SuppressWarnings("rawtypes")
@@ -28,8 +27,8 @@ public class GUI {
     private JPanel mainPnl;
     private JRadioButton directedRadio;
     private JRadioButton undirectedRadio;
-    private JComboBox endVertexCbx;
-    private JComboBox startVertexCbx;
+    private JComboBox<String> endVertexCbx;
+    private JComboBox<String> startVertexCbx;
     private JButton dijkstraShortestPathButton;
     private JButton fordFulkersonMaximumFlowButton;
     private JTable edgesTable;
@@ -45,10 +44,17 @@ public class GUI {
 
     private DefaultTableModel tableModel;
     Node[] nodes;
+    Edge[] edges;
+    int[] nodeFreq;
+
+    boolean isDirected = true;
+    public static final String[] columns = {
+            "Id", "From", "To", "Cost"
+    };
 
     public GUI() {
         JFrame form = new JFrame("Graph Manipulation");
-        form.setMinimumSize(new Dimension(1100, 750));
+        form.setMinimumSize(new Dimension(1150, 800));
         form.setResizable(false);
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
@@ -61,6 +67,12 @@ public class GUI {
         } catch (Exception ignored) {
         }
 //        --------------------------------------------------------
+        startVertexCbx.setMinimumSize(Constants.comboBoxDimension);
+        startVertexCbx.setPreferredSize(Constants.comboBoxDimension);
+        startVertexCbx.setMaximumSize(Constants.comboBoxDimension);
+        endVertexCbx.setMinimumSize(Constants.comboBoxDimension);
+        endVertexCbx.setPreferredSize(Constants.comboBoxDimension);
+        endVertexCbx.setMaximumSize(Constants.comboBoxDimension);
         startVertexCbx.addActionListener(e -> handleComboBoxChanges(0));
         endVertexCbx.addActionListener(e -> handleComboBoxChanges(1));
 
@@ -75,6 +87,7 @@ public class GUI {
         undirectedRadio.addActionListener(e -> handleDirectedRadioChanges(false));
 //        --------------------------------------------------------
         graphPnl.setMinimumSize(Constants.graphPnlDimension);
+        graphPnl.setMaximumSize(Constants.graphPnlDimension);
         graphPnl.setSize(Constants.graphPnlDimension);
 
         JPanel centerPanel = new JPanel(new GridLayout(0, 1));
@@ -105,48 +118,18 @@ public class GUI {
         });
 //        --------------------------------------------------------
         initTable();
-        initNodes();
+        initNodesAndEdges();
         initGraph();
 
     }
 
-    private void initTable() {
-        String[] columns = {
-           "Id","From","To","Cost"
-        };
 
-        edgesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        tableModel = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return column != 0;
-            }
-
-        };
-        edgesTable.setModel(tableModel);
-
-        tableModel.addColumn(columns[0]);
-        tableModel.addColumn(columns[1]);
-        tableModel.addColumn(columns[2]);
-        tableModel.addColumn(columns[3]);
-
-        tableModel.addRow(new Integer[3]);
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        edgesTable.getColumn(columns[0]).setCellRenderer(centerRenderer);
-        edgesTable.getColumn(columns[1]).setCellRenderer(centerRenderer);
-        edgesTable.getColumn(columns[2]).setCellRenderer(centerRenderer);
-        edgesTable.getColumn(columns[3]).setCellRenderer(centerRenderer);
-
-        tableModel.addTableModelListener(this::tableEditChanged);
-    }
-
-
-
-    private void initNodes() {
+    private void initNodesAndEdges() {
         nodes = new Node[Constants.MAX_VERTICES];
+        nodeFreq = new int[nodes.length];
         for (int i = 0; i < nodes.length; ++i) nodes[i] = new Node(i);
+
+        edges = new Edge[Constants.MAX_EDGES];
     }
 
     private void initGraph() {
@@ -168,29 +151,38 @@ public class GUI {
         JPanel view = (JPanel) graphPnl.getViewport().getView();
         view.add(panel);
         view.validate();
-
         //vv.getPickedVertexState().isPicked(); // you will need it
     }
 
-    private void clearAll(){
-        // TODO: clear all data
+    private void clearAll() {
+        for (int i = 0; i < edges.length; ++i) {
+            removeEdgeFromGraph(edges[i], i);
+        }
+        for (int i = 0; i < edgesTable.getRowCount(); ++i) {
+            edgesTable.setValueAt(null, i, 1);
+            edgesTable.setValueAt(null, i, 2);
+            edgesTable.setValueAt(null, i, 3);
+        }
+        refreshGraph();
     }
-    private void handleDirectedRadioChanges(boolean isDirected){
-        showErrorMessage("h","h");
+
+    private void handleDirectedRadioChanges(boolean isDirected) {
+        if (this.isDirected == isDirected) return;
+        this.isDirected = isDirected;
+        refreshGraph();
     }
-    private void handleComboBoxChanges(int type){
+
+    private void handleComboBoxChanges(int type) {
         // StartCbx -> type = 0
         // EndCbx -> type = 1
-        if(type == 0){
+        if (type == 0) {
             // TODO: handle change of start cbx
-        }
-        else if (type == 1){
+        } else if (type == 1) {
             // TODO: handle change of end cbx
         }
     }
-    private void tableEditChanged(TableModelEvent tableModelEvent) {
-        // TODO: handle change of data here
-    }
+
+
     private void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, "Error in " + title, JOptionPane.ERROR_MESSAGE);
     }
@@ -200,10 +192,42 @@ public class GUI {
 
     }
 
+    private void removeEdgeFromGraph(Edge e, int idx) {
+        if (e != null) {
+            g.removeEdge(e);
+            g.removeVertex(nodes[e.from]);
+            g.removeVertex(nodes[e.to]);
+        }
+        edges[idx] = null;
+    }
+
     private void refreshGraph() {
+        Arrays.fill(nodeFreq, 0);
+        for (Edge curr : edges) {
+            if (curr != null) {
+                g.removeEdge(curr);
+                g.addEdge(curr, nodes[curr.from], nodes[curr.to], isDirected ? EdgeType.DIRECTED : EdgeType.UNDIRECTED);
+                nodeFreq[curr.from]++;
+                nodeFreq[curr.to]++;
+            }
+        }
         layout = new CircleLayout<>(g);
         vv.setGraphLayout(layout);
         vv.repaint();
+        refreshComboBoxes();
+
+    }
+
+    private void refreshComboBoxes() {
+        endVertexCbx.removeAllItems();
+        startVertexCbx.removeAllItems();
+
+        for (int i = 0; i < nodeFreq.length; ++i) {
+            if (nodeFreq[i] > 0) {
+                startVertexCbx.addItem(String.valueOf(i));
+                endVertexCbx.addItem(String.valueOf(i));
+            }
+        }
     }
 
     public class MyNodeFillPaintFunction<Node> implements Function<Node, Paint> {
@@ -211,6 +235,104 @@ public class GUI {
         public Paint apply(Node n) {
             return null;
         }
+    }
+
+    // ---------------------------------------------------------------
+    private void initTable() {
+        edgesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        tableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+
+        };
+        edgesTable.setModel(tableModel);
+
+        tableModel.addColumn(columns[0]);
+        tableModel.addColumn(columns[1]);
+        tableModel.addColumn(columns[2]);
+        tableModel.addColumn(columns[3]);
+
+        // init rows
+        for (int i = 0; i < Constants.MAX_EDGES; ++i) {
+            tableModel.addRow(new Integer[columns.length]);
+            tableModel.setValueAt(tableModel.getRowCount(), tableModel.getRowCount() - 1, 0);
+        }
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        edgesTable.getColumn(columns[0]).setCellRenderer(centerRenderer);
+        edgesTable.getColumn(columns[1]).setCellRenderer(centerRenderer);
+        edgesTable.getColumn(columns[2]).setCellRenderer(centerRenderer);
+        edgesTable.getColumn(columns[3]).setCellRenderer(centerRenderer);
+
+        tableModel.addTableModelListener(this::tableEditChanged);
+
+
+    }
+
+    private void tableEditChanged(TableModelEvent event) {
+
+        int selectedRow = edgesTable.getSelectedRow();
+        Edge edge = edges[selectedRow];
+        if (!isCompleteRow(selectedRow)) {
+            removeEdgeFromGraph(edge, selectedRow);
+            refreshGraph();
+            return;
+        }
+
+        Node from = nodes[(Integer.parseInt((String) edgesTable.getValueAt(selectedRow, 1)))];
+        Node to = nodes[(Integer.parseInt((String) edgesTable.getValueAt(selectedRow, 2)))];
+        int cost = (Integer.parseInt((String) edgesTable.getValueAt(selectedRow, 3)));
+
+        // old edge
+        if (edge != null) removeEdgeFromGraph(edge, selectedRow);
+        edges[selectedRow] = new Edge(from, to, cost);
+
+        refreshGraph();
+
+    }
+
+    private boolean isCompleteRow(int row) {
+       /* if (checkValue(row, 1, true))
+            if (checkValue(row, 2, true))
+                return checkValue(row, 3, false);
+
+        return false;*/
+        return (checkValue(row, 1, true) && checkValue(row, 2, true) && checkValue(row, 3, false));
+
+    }
+
+    private boolean checkValue(int row, int col, boolean checkNode) {
+        Object value = edgesTable.getValueAt(row, col);
+        int val;
+        if (value == null || value.toString().isEmpty())
+            return false;
+        try {
+            val = Integer.parseInt(value.toString());
+        } catch (Exception e) {
+            showErrorMessage("Edges table datatype", "Unsupported datatype in (" + row + "," + col + ") please enter integers only");
+            edgesTable.setValueAt(null, row, col);
+            return false;
+        }
+        if (val <= 0) {
+            showErrorMessage("Edges table value", "Negative values are not accepted.");
+            edgesTable.setValueAt(null, row, col);
+            return false;
+        }
+        if (checkNode) {
+            try {
+                Node node = nodes[val];
+                if (node == null) throw new Exception();
+            } catch (Exception e) {
+                showErrorMessage("Edges table datatype", "Node out of bound in (" + row + "," + col + ") please enter value between 0 and " + Constants.MAX_VERTICES + " only");
+                edgesTable.setValueAt(null, row, col);
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
