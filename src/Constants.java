@@ -11,5 +11,7 @@ public class Constants {
     public static final Color NORMAL_EDGE_COLOR = Color.PINK;
     public static final Color VISITED_EDGE_COLOR = Color.GREEN;
 
+    public static final Dimension graphPnlDimension = new Dimension(500,500);
+
 
 }

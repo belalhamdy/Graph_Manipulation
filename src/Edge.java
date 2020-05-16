@@ -3,7 +3,7 @@ public class Edge {
     public enum GraphType{
         DIRECTED,UNDIRECTED
     }
-    Edge(Node from, Node to, int cost, GraphType type) throws Exception {
+    Edge(Node from, Node to, int cost) throws Exception {
         this.from = from.getValue();
         this.to = to.getValue();
         this.cost = cost;
