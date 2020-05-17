@@ -226,7 +226,7 @@ public class GUI {
         Solution solution;
 
         try {
-            AlgorithmsHandler.executeAlgorithm(edges, nodes[getStartComboBoxValue()], nodes[getEndComboBoxValue()],graphType,algorithmType );
+            solution = AlgorithmsHandler.executeAlgorithm(edges, nodes[getStartComboBoxValue()], nodes[getEndComboBoxValue()],graphType,algorithmType );
         } catch (Exception e) {
             showErrorMessage("Algorithm Execution", e.getMessage());
             return;

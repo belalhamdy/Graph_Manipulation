@@ -57,7 +57,7 @@ public class AlgorithmsHandler {
                 throw new Exception("Unsupported Algorithm is selected.");
         }
     }
-    public static List<Edge> executeAlgorithm(List<Edge> edges, Node start, Node end, Edge.GraphType graphType, AlgorithmType algorithmType) throws Exception {
+    public static Solution executeAlgorithm(List<Edge> edges, Node start, Node end, Edge.GraphType graphType, AlgorithmType algorithmType) throws Exception {
         int[][] graph;
         Solution solution;
         IAlgorithm algorithm;
@@ -82,9 +82,7 @@ public class AlgorithmsHandler {
             default:
                 throw new Exception("Unsupported Algorithm is selected.");
         }
-        solution = algorithm.getSolution();
-        // TODO: Think about returning drawing edge rather than edge
-        return null;
+        return algorithm.getSolution();
     }
 
 
