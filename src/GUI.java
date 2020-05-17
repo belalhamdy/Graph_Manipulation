@@ -40,7 +40,6 @@ public class GUI {
     VisualizationViewer<Node, Edge> vv;
     Layout<Node, Edge> layout;
 
-    private DefaultTableModel tableModel;
     Node[] nodes;
     Edge[] edges;
     int[] nodeFreq;
@@ -293,7 +292,7 @@ public class GUI {
     // ---------------------------------------------------------------
     private void initTable() {
         edgesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        tableModel = new DefaultTableModel() {
+        DefaultTableModel tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column != 0;
