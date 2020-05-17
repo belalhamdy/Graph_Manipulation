@@ -8,11 +8,13 @@ public class Constants {
 
     public static final Color NORMAL_NODE_COLOR = Color.CYAN;
     public static final Color VISITED_NODE_COLOR = Color.YELLOW;
-    public static final Color NORMAL_EDGE_COLOR = Color.PINK;
-    public static final Color VISITED_EDGE_COLOR = Color.GREEN;
+    public static final Color PORTAL_START_NODE_COLOR = Color.GREEN;
+    public static final Color PORTAL_END_NODE_COLOR = Color.RED;
+
 
     public static final Dimension graphPnlDimension = new Dimension(500,650);
     public static final Dimension comboBoxDimension = new Dimension(100,30);
+
 
 
 }

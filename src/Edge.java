@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Edge {
     int from, to,cost;
     public enum GraphType{
@@ -28,7 +30,12 @@ public class Edge {
         if (this.from >= Constants.MAX_VERTICES || this.to >= Constants.MAX_VERTICES)
             throw new Exception("Please enter a value between 0 and " + Constants.MAX_VERTICES + "(Exclusive).");
     }
-
+   /* void setVisited(){
+        color = Constants.VISITED_EDGE_COLOR;
+    }
+    void resetColor(){
+        color = Constants.NORMAL_EDGE_COLOR;
+    }*/
 
 
 }

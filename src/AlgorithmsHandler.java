@@ -84,7 +84,6 @@ public class AlgorithmsHandler {
         }
         solution = algorithm.getSolution();
         // TODO: Think about returning drawing edge rather than edge
-        // TODO: Loop on every edge check if it's nodes are in solution so color it
         return null;
     }
 

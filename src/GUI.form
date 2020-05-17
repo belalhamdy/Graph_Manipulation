@@ -61,7 +61,7 @@
                 <properties/>
                 <border type="none" title="Start Vertex"/>
                 <children>
-                  <component id="2c74c" class="javax.swing.JComboBox" binding="endVertexCbx">
+                  <component id="2c74c" class="javax.swing.JComboBox" binding="startVertexCbx">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -79,7 +79,7 @@
                 <properties/>
                 <border type="none" title="End Vertex"/>
                 <children>
-                  <component id="6127f" class="javax.swing.JComboBox" binding="startVertexCbx">
+                  <component id="6127f" class="javax.swing.JComboBox" binding="endVertexCbx">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>

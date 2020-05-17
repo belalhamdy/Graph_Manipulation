@@ -2,7 +2,6 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -18,17 +17,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.function.Function;
 
 @SuppressWarnings("rawtypes")
 public class GUI {
     private JPanel mainPnl;
     private JRadioButton directedRadio;
     private JRadioButton undirectedRadio;
-    private JComboBox<String> endVertexCbx;
     private JComboBox<String> startVertexCbx;
+    private JComboBox<String> endVertexCbx;
     private JButton dijkstraShortestPathButton;
     private JButton fordFulkersonMaximumFlowButton;
     private JTable edgesTable;
@@ -67,14 +64,16 @@ public class GUI {
         } catch (Exception ignored) {
         }
 //        --------------------------------------------------------
-        startVertexCbx.setMinimumSize(Constants.comboBoxDimension);
-        startVertexCbx.setPreferredSize(Constants.comboBoxDimension);
-        startVertexCbx.setMaximumSize(Constants.comboBoxDimension);
         endVertexCbx.setMinimumSize(Constants.comboBoxDimension);
         endVertexCbx.setPreferredSize(Constants.comboBoxDimension);
         endVertexCbx.setMaximumSize(Constants.comboBoxDimension);
-        startVertexCbx.addActionListener(e -> handleComboBoxChanges(0));
-        endVertexCbx.addActionListener(e -> handleComboBoxChanges(1));
+
+        startVertexCbx.setMinimumSize(Constants.comboBoxDimension);
+        startVertexCbx.setPreferredSize(Constants.comboBoxDimension);
+        startVertexCbx.setMaximumSize(Constants.comboBoxDimension);
+
+        startVertexCbx.addActionListener(e -> handleComboBoxChanges(Node.PortalType.START));
+        endVertexCbx.addActionListener(e -> handleComboBoxChanges(Node.PortalType.END));
 
         clearAllButton.addActionListener(e -> clearAll());
 //        --------------------------------------------------------
@@ -139,9 +138,12 @@ public class GUI {
         layout.setSize(Constants.graphPnlDimension);
         vv = new VisualizationViewer<>(layout);
 
+        Transformer<Node, Paint> vertexColor = i -> i.color;
+
         vv.setSize(Constants.graphPnlDimension); //Sets the viewing area size
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
         vv.getRenderContext().setEdgeLabelTransformer(s -> String.valueOf(s.cost));
+        vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
 
         final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
         final AbstractModalGraphMouse graphMouse = new DefaultModalGraphMouse<Integer, Number>();
@@ -172,14 +174,29 @@ public class GUI {
         refreshGraph();
     }
 
-    private void handleComboBoxChanges(int type) {
-        // StartCbx -> type = 0
-        // EndCbx -> type = 1
-        if (type == 0) {
-            // TODO: handle change of start cbx
-        } else if (type == 1) {
-            // TODO: handle change of end cbx
+    private void handleComboBoxChanges(Node.PortalType type) {
+        int startVal, endVal;
+        if (startVertexCbx.getSelectedItem() == null || endVertexCbx.getSelectedItem() == null) return;
+
+        String startItem = String.valueOf(startVertexCbx.getSelectedItem());
+        String endItem = String.valueOf(endVertexCbx.getSelectedItem());
+
+        if (startItem.isEmpty() || endItem.isEmpty()) return;
+
+        try {
+            startVal = Integer.parseInt(startItem);
+            endVal = Integer.parseInt(endItem);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
         }
+        clearNodesColors();
+        nodes[startVal].setPortal(Node.PortalType.START);
+        nodes[endVal].setPortal(Node.PortalType.END);
+
+        refreshGraphColors();
+
+
     }
 
 
@@ -189,7 +206,10 @@ public class GUI {
 
     private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
 
+    }
 
+    private void clearNodesColors() {
+        for (Node curr : nodes) curr.unsetVisited();
     }
 
     private void removeEdgeFromGraph(Edge e, int idx) {
@@ -199,6 +219,10 @@ public class GUI {
             g.removeVertex(nodes[e.to]);
         }
         edges[idx] = null;
+    }
+
+    private void refreshGraphColors() {
+        vv.repaint();
     }
 
     private void refreshGraph() {
@@ -222,20 +246,20 @@ public class GUI {
         endVertexCbx.removeAllItems();
         startVertexCbx.removeAllItems();
 
+        int siz = 0;
         for (int i = 0; i < nodeFreq.length; ++i) {
             if (nodeFreq[i] > 0) {
-                startVertexCbx.addItem(String.valueOf(i));
                 endVertexCbx.addItem(String.valueOf(i));
+                startVertexCbx.addItem(String.valueOf(i));
+                ++siz;
             }
+        }
+        if (siz > 1) {
+            startVertexCbx.setSelectedIndex(0);
+            endVertexCbx.setSelectedIndex(1);
         }
     }
 
-    public class MyNodeFillPaintFunction<Node> implements Function<Node, Paint> {
-        @Override
-        public Paint apply(Node n) {
-            return null;
-        }
-    }
 
     // ---------------------------------------------------------------
     private void initTable() {
@@ -295,11 +319,6 @@ public class GUI {
     }
 
     private boolean isCompleteRow(int row) {
-       /* if (checkValue(row, 1, true))
-            if (checkValue(row, 2, true))
-                return checkValue(row, 3, false);
-
-        return false;*/
         return (checkValue(row, 1, true) && checkValue(row, 2, true) && checkValue(row, 3, false));
 
     }
