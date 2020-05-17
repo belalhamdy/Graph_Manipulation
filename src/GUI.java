@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class GUI {
@@ -174,26 +175,40 @@ public class GUI {
         refreshGraph();
     }
 
+    private int getStartComboBoxValue() throws Exception {
+        if (startVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in start vertex.");
+        String startItem = String.valueOf(startVertexCbx.getSelectedItem());
+        try {
+            return Integer.parseInt(startItem);
+        } catch (Exception e) {
+            throw new Exception("Unsupported datatype in start vertex");
+        }
+    }
+
+    private int getEndComboBoxValue() throws Exception {
+        if (endVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in end vertex.");
+        String startItem = String.valueOf(endVertexCbx.getSelectedItem());
+        try {
+            return Integer.parseInt(startItem);
+        } catch (Exception e) {
+            throw new Exception("Unsupported datatype in end vertex");
+        }
+    }
+
     private void handleComboBoxChanges(Node.PortalType type) {
         int startVal, endVal;
-        if (startVertexCbx.getSelectedItem() == null || endVertexCbx.getSelectedItem() == null) return;
-
-        String startItem = String.valueOf(startVertexCbx.getSelectedItem());
-        String endItem = String.valueOf(endVertexCbx.getSelectedItem());
-
-        if (startItem.isEmpty() || endItem.isEmpty()) return;
 
         try {
-            startVal = Integer.parseInt(startItem);
-            endVal = Integer.parseInt(endItem);
+            startVal = getStartComboBoxValue();
+            endVal = getEndComboBoxValue();
         } catch (Exception ex) {
             ex.printStackTrace();
             return;
         }
+
         clearNodesColors();
         nodes[startVal].setPortal(Node.PortalType.START);
         nodes[endVal].setPortal(Node.PortalType.END);
-
         refreshGraphColors();
 
 
@@ -205,7 +220,18 @@ public class GUI {
     }
 
     private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
+        startVertexCbx.setSelectedIndex(startVertexCbx.getSelectedIndex()); // refresh colors from previous execution
+        List<Edge> edges = null;// TODO: fill here edges
+        Edge.GraphType graphType = isDirected ? Edge.GraphType.DIRECTED : Edge.GraphType.UNDIRECTED;
+        Solution solution;
 
+        try {
+            AlgorithmsHandler.executeAlgorithm(edges, nodes[getStartComboBoxValue()], nodes[getEndComboBoxValue()],graphType,algorithmType );
+        } catch (Exception e) {
+            showErrorMessage("Algorithm Execution", e.getMessage());
+            return;
+        }
+        // TODO: show results
     }
 
     private void clearNodesColors() {
