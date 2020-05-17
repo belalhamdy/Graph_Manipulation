@@ -218,10 +218,13 @@ public class GUI {
     private void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, "Error in " + title, JOptionPane.ERROR_MESSAGE);
     }
-
+    private List<Edge> getGraphEdges(){
+        // TODO: fill here edges
+        return null;
+    }
     private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
         startVertexCbx.setSelectedIndex(startVertexCbx.getSelectedIndex()); // refresh colors from previous execution
-        List<Edge> edges = null;// TODO: fill here edges
+        List<Edge> edges = getGraphEdges();
         Edge.GraphType graphType = isDirected ? Edge.GraphType.DIRECTED : Edge.GraphType.UNDIRECTED;
         Solution solution;
 
