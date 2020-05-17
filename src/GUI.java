@@ -353,6 +353,8 @@ public class GUI {
     }
 
     private boolean checkValue(int row, int col, boolean checkNode) {
+        if(row >= edgesTable.getRowCount() || col >= edgesTable.getColumnCount()) return false;
+
         Object value = edgesTable.getValueAt(row, col);
         int val;
         if (value == null || value.toString().isEmpty())
