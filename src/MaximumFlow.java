@@ -29,7 +29,7 @@ public class MaximumFlow implements IAlgorithm {
         for (int i = 0; i < Constants.MAX_VERTICES; ++i)
             visited[i] = false;
 
-        LinkedList<Integer> queue = new LinkedList<Integer>();
+        LinkedList<Integer> queue = new LinkedList<>();
         queue.add(start);
         visited[start] = true;
         parent[start] = -1;

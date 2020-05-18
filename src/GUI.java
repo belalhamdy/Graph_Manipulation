@@ -20,7 +20,6 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("rawtypes")
 public class GUI {
     private JPanel mainPnl;
     private JRadioButton directedRadio;
@@ -72,8 +71,8 @@ public class GUI {
         startVertexCbx.setPreferredSize(Constants.comboBoxDimension);
         startVertexCbx.setMaximumSize(Constants.comboBoxDimension);
 
-        startVertexCbx.addActionListener(e -> handleComboBoxChanges(Node.PortalType.START));
-        endVertexCbx.addActionListener(e -> handleComboBoxChanges(Node.PortalType.END));
+        startVertexCbx.addActionListener(e -> handleComboBoxChanges());
+        endVertexCbx.addActionListener(e -> handleComboBoxChanges());
 
         clearAllButton.addActionListener(e -> clearAll());
 //        --------------------------------------------------------
@@ -100,21 +99,8 @@ public class GUI {
             }
         });
 //        --------------------------------------------------------
-        dijkstraShortestPathButton.addActionListener(e -> {
-            try {
-                handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.DIJKSTRA);
-            } catch (Exception ex) {
-                showErrorMessage("Dijkstra", ex.getMessage());
-            }
-        });
-        fordFulkersonMaximumFlowButton.addActionListener(e -> {
-            try {
-                handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.MAXIMUM_FLOW);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                showErrorMessage("Ford-Fulkerson", ex.getMessage());
-            }
-        });
+        dijkstraShortestPathButton.addActionListener(e -> handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.DIJKSTRA));
+        fordFulkersonMaximumFlowButton.addActionListener(e -> handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.MAXIMUM_FLOW));
 //        --------------------------------------------------------
         initTable();
         initNodesAndEdges();
@@ -199,7 +185,7 @@ public class GUI {
         dijkstraShortestPathButton.setEnabled(isVisible);
         fordFulkersonMaximumFlowButton.setEnabled(isVisible);
     }*/
-    private void handleComboBoxChanges(Node.PortalType type) {
+    private void handleComboBoxChanges() {
         int startVal, endVal;
         //buttonsVisibility(false);
         try {
@@ -229,7 +215,7 @@ public class GUI {
         JOptionPane.showMessageDialog(null, message, "Warning in " + title, JOptionPane.WARNING_MESSAGE);
     }
 
-    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
+    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType)  {
         Solution solution;
         try {
             int startVal = getStartComboBoxValue();

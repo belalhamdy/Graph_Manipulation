@@ -30,20 +30,12 @@ public class Node {
             color = Constants.NORMAL_NODE_COLOR;
     }
 
-    void unsetPortal() {
-        if (isPortal)
-            color = Constants.NORMAL_NODE_COLOR;
-        isPortal = false;
-    }
 
     // must return int even if it's not an int
     int getValue() {
         return value;
     }
 
-    void setValue(int value) {
-        this.value = value;
-    }
 
     @Override
     public String toString() {
