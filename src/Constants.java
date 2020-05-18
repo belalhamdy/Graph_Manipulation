@@ -7,7 +7,7 @@ public class Constants {
     public static final int NO_PARENT = -1;
 
     public static final Color NORMAL_NODE_COLOR = Color.CYAN;
-    public static final Color VISITED_NODE_COLOR = Color.YELLOW;
+    public static final Color VISITED_NODE_COLOR = Color.PINK;
     public static final Color PORTAL_START_NODE_COLOR = Color.GREEN;
     public static final Color PORTAL_END_NODE_COLOR = Color.RED;
 
