@@ -119,6 +119,7 @@ public class GUI {
         initTable();
         initNodesAndEdges();
         initGraph();
+        //buttonsVisibility(false);
 
     }
 
@@ -193,21 +194,27 @@ public class GUI {
             throw new Exception("Unsupported datatype in end vertex");
         }
     }
-
+    /*private void buttonsVisibility(boolean isVisible){
+        isVisible = true;
+        dijkstraShortestPathButton.setEnabled(isVisible);
+        fordFulkersonMaximumFlowButton.setEnabled(isVisible);
+    }*/
     private void handleComboBoxChanges(Node.PortalType type) {
         int startVal, endVal;
-
+        //buttonsVisibility(false);
         try {
             startVal = getStartComboBoxValue();
             endVal = getEndComboBoxValue();
         } catch (Exception ex) {
-            ex.printStackTrace();
             return;
         }
 
         clearNodesColors();
         nodes[startVal].setPortal(Node.PortalType.START);
         nodes[endVal].setPortal(Node.PortalType.END);
+
+        //if (startVal != endVal) buttonsVisibility(true);
+
         refreshGraphColors();
 
 
@@ -217,23 +224,44 @@ public class GUI {
     private void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, "Error in " + title, JOptionPane.ERROR_MESSAGE);
     }
-    private List<Edge> getGraphEdges(){
-        // TODO: fill here edges
-        return null;
-    }
-    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
-        startVertexCbx.setSelectedIndex(startVertexCbx.getSelectedIndex()); // refresh colors from previous execution
-        List<Edge> edges = getGraphEdges();
-        Edge.GraphType graphType = isDirected ? Edge.GraphType.DIRECTED : Edge.GraphType.UNDIRECTED;
-        Solution solution;
 
+    private void showWarningMessage(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, "Warning in " + title, JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) throws Exception {
+        Solution solution;
         try {
-            solution = AlgorithmsHandler.executeAlgorithm(edges, nodes[getStartComboBoxValue()], nodes[getEndComboBoxValue()],graphType,algorithmType );
+            int startVal = getStartComboBoxValue();
+            int endVal = getEndComboBoxValue();
+
+            if (startVal == endVal) throw new Exception("Start node cannot be same as end node.");
+            startVertexCbx.setSelectedIndex(startVertexCbx.getSelectedIndex()); // refresh colors from previous execution
+
+            Edge.GraphType graphType = isDirected ? Edge.GraphType.DIRECTED : Edge.GraphType.UNDIRECTED;
+
+            solution = AlgorithmsHandler.executeAlgorithm(edges, nodes[startVal], nodes[endVal], graphType, algorithmType);
         } catch (Exception e) {
+            e.printStackTrace();
             showErrorMessage("Algorithm Execution", e.getMessage());
             return;
         }
-        // TODO: show results
+        String message = "";
+        switch (algorithmType) {
+            case DIJKSTRA:
+                if (solution.repeatEdge)
+                    showWarningMessage("Dijkstra execution", "You have entered multiple edges between same nodes so Dijkstra will take the minimum cost.");
+                message = "Dijkstra Shortest Path Cost is: " + solution.solutionCost;
+                break;
+            case MAXIMUM_FLOW:
+                if (solution.repeatEdge)
+                    showWarningMessage("Ford-Fulkerson execution", "You have entered multiple edges between same nodes so Ford-Fulkerson will take the sum of their costs.");
+                message = "Maximum Flow by Ford-Fulkerson is: " + solution.solutionCost;
+                break;
+        }
+
+        setListOfNodesVisited(solution.nodes);
+        resultsTxt.setText(message);
     }
 
     private void clearNodesColors() {
@@ -247,6 +275,23 @@ public class GUI {
             g.removeVertex(nodes[e.to]);
         }
         edges[idx] = null;
+    }
+
+    private void setListOfNodesVisited(List<Integer> nodesIndices) {
+        int startVal, endVal;
+        try {
+            startVal = getStartComboBoxValue();
+            endVal = getEndComboBoxValue();
+
+        } catch (Exception e) {
+            showErrorMessage("Coloring Nodes", e.getMessage());
+            return;
+        }
+        for (Integer i : nodesIndices) {
+            if (i == startVal || i == endVal) continue;
+            nodes[i].setVisited();
+        }
+        refreshGraphColors();
     }
 
     private void refreshGraphColors() {
@@ -327,6 +372,7 @@ public class GUI {
     private void tableEditChanged(TableModelEvent event) {
 
         int selectedRow = edgesTable.getSelectedRow();
+        if(selectedRow < 0) return;
         Edge edge = edges[selectedRow];
         if (!isCompleteRow(selectedRow)) {
             removeEdgeFromGraph(edge, selectedRow);
@@ -352,7 +398,7 @@ public class GUI {
     }
 
     private boolean checkValue(int row, int col, boolean checkNode) {
-        if(row >= edgesTable.getRowCount() || col >= edgesTable.getColumnCount()) return false;
+        if (row >= edgesTable.getRowCount() || col >= edgesTable.getColumnCount()) return false;
 
         Object value = edgesTable.getValueAt(row, col);
         int val;
@@ -365,7 +411,7 @@ public class GUI {
             edgesTable.setValueAt(null, row, col);
             return false;
         }
-        if (val <= 0) {
+        if (val < 0) {
             showErrorMessage("Edges table value", "Negative values are not accepted.");
             edgesTable.setValueAt(null, row, col);
             return false;

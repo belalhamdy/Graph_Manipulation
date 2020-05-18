@@ -74,7 +74,7 @@ public class MaximumFlow implements IAlgorithm {
     }
 
     // gets the nodes in path
-    private List<Node> getPathNodes() {
+    private List<Integer> getPathNodes() {
         boolean[] visited = new boolean[Constants.MAX_VERTICES];
         for (int i = 0; i < Constants.MAX_VERTICES; ++i)
             visited[i] = false;
@@ -86,10 +86,10 @@ public class MaximumFlow implements IAlgorithm {
             }
         }
 
-        List<Node> ret = new ArrayList<>();
+        List<Integer> ret = new ArrayList<>();
         for (int i = 0; i < visited.length; ++i) {
             if (visited[i])
-                ret.add(new Node(i));
+                ret.add(i);
         }
         return ret;
     }

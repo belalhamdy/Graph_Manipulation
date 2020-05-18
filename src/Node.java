@@ -14,7 +14,6 @@ public class Node {
     }
 
     void setVisited() {
-        if (!isPortal)
             color = Constants.VISITED_NODE_COLOR;
     }
 

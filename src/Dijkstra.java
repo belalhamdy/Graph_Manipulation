@@ -8,6 +8,7 @@ public class Dijkstra implements IAlgorithm {
     int[] shortestDistances, parents;
     boolean[] added;
 
+    int nVertices = Constants.MAX_VERTICES;
     Dijkstra(int[][] graph, int start, int end) {
         this.graph = graph;
         this.start = start;
@@ -15,13 +16,13 @@ public class Dijkstra implements IAlgorithm {
     }
 
     private void init() {
-        parents = new int[Constants.MAX_VERTICES];
+        parents = new int[nVertices];
         parents[start] = Constants.NO_PARENT;
 
-        shortestDistances = new int[Constants.MAX_VERTICES];
-        added = new boolean[Constants.MAX_VERTICES];
+        shortestDistances = new int[nVertices];
+        added = new boolean[nVertices];
 
-        for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
+        for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
             shortestDistances[vertexIndex] = Integer.MAX_VALUE;
             added[vertexIndex] = false;
         }
@@ -30,20 +31,19 @@ public class Dijkstra implements IAlgorithm {
     }
 
     public void fillShortestDistancesArray() {
-        for (int i = 1; i < Constants.MAX_VERTICES; i++) {
+        for (int i = 1; i < nVertices; i++) {
             int nearestVertex = -1;
             int shortestDistance = Integer.MAX_VALUE;
-            for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
-                if (!added[vertexIndex] &&
-                        shortestDistances[vertexIndex] <
-                                shortestDistance) {
+            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+                if (!added[vertexIndex] && shortestDistances[vertexIndex] < shortestDistance) {
                     nearestVertex = vertexIndex;
                     shortestDistance = shortestDistances[vertexIndex];
                 }
             }
+            if (nearestVertex == -1) continue;
             added[nearestVertex] = true;
 
-            for (int vertexIndex = 0; vertexIndex < Constants.MAX_VERTICES; vertexIndex++) {
+            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
 
                 int edgeDistance = graph[nearestVertex][vertexIndex];
 
@@ -57,12 +57,12 @@ public class Dijkstra implements IAlgorithm {
     }
 
     // gets the nodes in path
-    private List<Node> getPathNodes(int currentVertex) {
+    private List<Integer> getPathNodes(int currentVertex) {
         if (currentVertex == Constants.NO_PARENT)
             return new ArrayList<>();
 
-        List<Node> ret = getPathNodes(parents[currentVertex]);
-        ret.add(new Node(currentVertex));
+        List<Integer> ret = getPathNodes(parents[currentVertex]);
+        ret.add(currentVertex);
         return ret;
     }
 
