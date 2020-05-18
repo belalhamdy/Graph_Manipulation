@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Dijkstra implements IAlgorithm {
@@ -18,6 +19,7 @@ public class Dijkstra implements IAlgorithm {
     private void init() {
         parents = new int[nVertices];
         parents[start] = Constants.NO_PARENT;
+        Arrays.fill(parents,-1);
 
         shortestDistances = new int[nVertices];
         added = new boolean[nVertices];

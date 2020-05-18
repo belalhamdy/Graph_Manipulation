@@ -87,6 +87,7 @@ public class AlgorithmsHandler {
 
         Solution solution = algorithm.getSolution();
         solution.repeatEdge = repeatEdge;
+        if(solution.nodes.size() < 2) throw new Exception("No solution found.");
         return solution;
     }
 

@@ -2,12 +2,14 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import org.apache.commons.collections15.Transformer;
 
 import javax.swing.*;
@@ -131,6 +133,8 @@ public class GUI {
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
         vv.getRenderContext().setEdgeLabelTransformer(s -> String.valueOf(s.cost));
         vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
+
+        vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<>());
 
         final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
         final AbstractModalGraphMouse graphMouse = new DefaultModalGraphMouse<Integer, Number>();
