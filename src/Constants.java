@@ -6,10 +6,10 @@ public class Constants {
     public static final int GRAPH_INITIAL_VALUE = 0;
     public static final int NO_PARENT = -1;
 
-    public static final Color NORMAL_NODE_COLOR = Color.GRAY;
-    public static final Color VISITED_NODE_COLOR = Color.PINK;
-    public static final Color PORTAL_START_NODE_COLOR = Color.GREEN;
-    public static final Color PORTAL_END_NODE_COLOR = Color.RED;
+    public static final Color NORMAL_NODE_COLOR = new Color(133, 146, 158);
+    public static final Color VISITED_NODE_COLOR = new Color(52, 152, 219);
+    public static final Color PORTAL_START_NODE_COLOR = new Color(46, 204, 113);
+    public static final Color PORTAL_END_NODE_COLOR =new Color(231, 76, 60);
 
 
     public static final Dimension graphPnlDimension = new Dimension(500,650);
