@@ -41,7 +41,7 @@ public class GUI {
     Layout<Node, Edge> layout;
 
     Node testNode1 = new Node(1), testNode2 = new Node(2);
-    Edge testEdge = new Edge(testNode1,testNode2,0);
+    Edge testEdge = new Edge(testNode1, testNode2, 0);
 
     Node[] nodes;
     Edge[] edges;
@@ -59,7 +59,7 @@ public class GUI {
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
         form.pack();
-
+        form.setVisible(true);
         form.setLocationRelativeTo(null);
 //        --------------------------------------------------------
         try {
@@ -110,7 +110,6 @@ public class GUI {
         initNodesAndEdges();
         initGraph();
         //buttonsVisibility(false);
-        form.setVisible(true);
     }
 
 
@@ -125,6 +124,18 @@ public class GUI {
     }
 
     private void initGraph() {
+        JDialog jDialog = new JDialog();
+        jDialog.setLayout(new GridBagLayout());
+        jDialog.add(new JLabel("Please wait until test edge loads..."));
+        jDialog.setMinimumSize(new Dimension(200, 50));
+        jDialog.setResizable(false);
+        jDialog.setModal(false);
+        jDialog.setUndecorated(true);
+        jDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        jDialog.setLocationRelativeTo(null);
+        jDialog.setVisible(true);
+
+
         g = new SparseMultigraph<>();
         layout = new CircleLayout<>(g);
 
@@ -151,14 +162,14 @@ public class GUI {
 
 
         //----------------------------------------------------
-        testNode1.color = Color.BLACK;
-        testNode2.color = Color.BLACK;
+        testNode1.color = Color.ORANGE;
+        testNode2.color = Color.ORANGE;
         g.addEdge(testEdge, testNode2, testNode1);
         layout = new CircleLayout<>(g);
         vv.setGraphLayout(layout);
         vv.repaint();
         //----------------------------------------------------
-
+        jDialog.setVisible(false);
 
         //vv.getPickedVertexState().isPicked(); // you will need it
     }
@@ -172,7 +183,7 @@ public class GUI {
             g.removeEdge(testEdge);
             g.removeVertex(testNode1);
             g.removeVertex(testNode2);
-            testEdge  = null;
+            testEdge = null;
             testNode1 = testNode2 = null;
         }
         Arrays.fill(nodeFreq, 0);
@@ -353,7 +364,7 @@ public class GUI {
     // ---------------------------------------------------------------
     private void initTable() {
         edgesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        DefaultTableModel tableModel = new DefaultTableModel() {
+        DefaultTableModel tableModel = new DefaultTableModel(null,columns) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column != 0;
@@ -361,11 +372,6 @@ public class GUI {
 
         };
         edgesTable.setModel(tableModel);
-
-        tableModel.addColumn(columns[0]);
-        tableModel.addColumn(columns[1]);
-        tableModel.addColumn(columns[2]);
-        tableModel.addColumn(columns[3]);
 
         // init rows
         for (int i = 0; i < Constants.MAX_EDGES; ++i) {

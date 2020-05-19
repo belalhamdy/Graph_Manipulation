@@ -7,10 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="becd768c-4d99-405d-b344-48dd1e085df6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Graph_Manipulation_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +100,7 @@
       <workItem from="1589691946048" duration="7072000" />
       <workItem from="1589742402386" duration="7229000" />
       <workItem from="1589817662955" duration="3323000" />
-      <workItem from="1589864202484" duration="4106000" />
+      <workItem from="1589864202484" duration="5111000" />
     </task>
     <task id="LOCAL-00001" summary="Added Utilities Functions">
       <created>1589348616515</created>
@@ -259,7 +256,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589819311637</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixed first edge lag">
+      <created>1589868519261</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1589868519261</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,7 +285,8 @@
     <MESSAGE value="Cleanup code" />
     <MESSAGE value="Changed edge shape to line" />
     <MESSAGE value="Testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Testing" />
+    <MESSAGE value="fixed first edge lag" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed first edge lag" />
   </component>
   <component name="WindowStateProjectService">
     <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1589659846259">
@@ -296,10 +301,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="551" y="218" key="#com.intellij.uiDesigner.palette.ComponentItemDialog/0.0.1536.824@0.0.1536.824" timestamp="1589666312293" />
-    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1589819310472">
+    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1589868517761">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1589819310472" />
+    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1589868517761" />
     <state x="147" y="65" key="DiffContextDialog" timestamp="1589410652966">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -308,22 +313,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1589643333915" />
-    <state width="1493" height="194" key="GridCell.Tab.0.bottom" timestamp="1589868490842">
+    <state width="1493" height="194" key="GridCell.Tab.0.bottom" timestamp="1589869463037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="194" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1589868490842" />
-    <state width="1493" height="194" key="GridCell.Tab.0.center" timestamp="1589868490842">
+    <state width="1493" height="194" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1589869463037" />
+    <state width="1493" height="194" key="GridCell.Tab.0.center" timestamp="1589869463037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="194" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1589868490842" />
-    <state width="1493" height="194" key="GridCell.Tab.0.left" timestamp="1589868490842">
+    <state width="1493" height="194" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1589869463037" />
+    <state width="1493" height="194" key="GridCell.Tab.0.left" timestamp="1589869463037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="194" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1589868490842" />
-    <state width="1493" height="194" key="GridCell.Tab.0.right" timestamp="1589868490842">
+    <state width="1493" height="194" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1589869463037" />
+    <state width="1493" height="194" key="GridCell.Tab.0.right" timestamp="1589869463037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="194" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1589868490842" />
+    <state width="1493" height="194" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1589869463037" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1589767729219">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -352,10 +357,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1589819616824" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1589819313605">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1589868523223">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1589819313605" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1589868523223" />
     <state x="475" y="41" key="refactoring.ChangeSignatureDialog" timestamp="1589525649728">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -364,10 +369,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="425" y="189" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1589606190303" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1589742941133">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1589868851380">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1589742941133" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1589868851380" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
