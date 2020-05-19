@@ -2,7 +2,6 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -19,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,10 +36,12 @@ public class GUI {
     private JScrollPane edgesPnl;
     private JButton clearAllButton;
 
-
     Graph<Node, Edge> g;
     VisualizationViewer<Node, Edge> vv;
     Layout<Node, Edge> layout;
+
+    Node testNode1 = new Node(1), testNode2 = new Node(2);
+    Edge testEdge = new Edge(testNode1,testNode2,0);
 
     Node[] nodes;
     Edge[] edges;
@@ -57,7 +59,7 @@ public class GUI {
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
         form.pack();
-        form.setVisible(true);
+
         form.setLocationRelativeTo(null);
 //        --------------------------------------------------------
         try {
@@ -108,7 +110,7 @@ public class GUI {
         initNodesAndEdges();
         initGraph();
         //buttonsVisibility(false);
-
+        form.setVisible(true);
     }
 
 
@@ -118,6 +120,8 @@ public class GUI {
         for (int i = 0; i < nodes.length; ++i) nodes[i] = new Node(i);
 
         edges = new Edge[Constants.MAX_EDGES];
+
+        testEdge = new Edge(nodes[0], nodes[1], -5);
     }
 
     private void initGraph() {
@@ -131,7 +135,7 @@ public class GUI {
 
         vv.setSize(Constants.graphPnlDimension); //Sets the viewing area size
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
-        vv.getRenderContext().setEdgeLabelTransformer(s -> String.valueOf(s.cost));
+        vv.getRenderContext().setEdgeLabelTransformer(s -> s == testEdge ? "Test Edge" : String.valueOf(s.cost));
         vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
 
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<>());
@@ -144,7 +148,47 @@ public class GUI {
         JPanel view = (JPanel) graphPnl.getViewport().getView();
         view.add(panel);
         view.validate();
+
+
+        //----------------------------------------------------
+        testNode1.color = Color.BLACK;
+        testNode2.color = Color.BLACK;
+        g.addEdge(testEdge, testNode2, testNode1);
+        layout = new CircleLayout<>(g);
+        vv.setGraphLayout(layout);
+        vv.repaint();
+        //----------------------------------------------------
+
+
         //vv.getPickedVertexState().isPicked(); // you will need it
+    }
+
+    private void refreshGraphColors() {
+        vv.repaint();
+    }
+
+    private void refreshGraph() {
+        if (testEdge != null) {
+            g.removeEdge(testEdge);
+            g.removeVertex(testNode1);
+            g.removeVertex(testNode2);
+            testEdge  = null;
+            testNode1 = testNode2 = null;
+        }
+        Arrays.fill(nodeFreq, 0);
+        for (Edge curr : edges) {
+            if (curr != null) {
+                g.removeEdge(curr);
+                g.addEdge(curr, nodes[curr.from], nodes[curr.to], isDirected ? EdgeType.DIRECTED : EdgeType.UNDIRECTED);
+                nodeFreq[curr.from]++;
+                nodeFreq[curr.to]++;
+            }
+        }
+        layout = new CircleLayout<>(g);
+        vv.setGraphLayout(layout);
+        vv.repaint();
+        refreshComboBoxes();
+
     }
 
     private void clearAll() {
@@ -184,6 +228,7 @@ public class GUI {
             throw new Exception("Unsupported datatype in end vertex");
         }
     }
+
     /*private void buttonsVisibility(boolean isVisible){
         isVisible = true;
         dijkstraShortestPathButton.setEnabled(isVisible);
@@ -219,7 +264,7 @@ public class GUI {
         JOptionPane.showMessageDialog(null, message, "Warning in " + title, JOptionPane.WARNING_MESSAGE);
     }
 
-    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType)  {
+    private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) {
         Solution solution;
         try {
             int startVal = getStartComboBoxValue();
@@ -284,26 +329,6 @@ public class GUI {
         refreshGraphColors();
     }
 
-    private void refreshGraphColors() {
-        vv.repaint();
-    }
-
-    private void refreshGraph() {
-        Arrays.fill(nodeFreq, 0);
-        for (Edge curr : edges) {
-            if (curr != null) {
-                g.removeEdge(curr);
-                g.addEdge(curr, nodes[curr.from], nodes[curr.to], isDirected ? EdgeType.DIRECTED : EdgeType.UNDIRECTED);
-                nodeFreq[curr.from]++;
-                nodeFreq[curr.to]++;
-            }
-        }
-        layout = new CircleLayout<>(g);
-        vv.setGraphLayout(layout);
-        vv.repaint();
-        refreshComboBoxes();
-
-    }
 
     private void refreshComboBoxes() {
         endVertexCbx.removeAllItems();
@@ -321,6 +346,7 @@ public class GUI {
             startVertexCbx.setSelectedIndex(0);
             endVertexCbx.setSelectedIndex(1);
         }
+
     }
 
 
@@ -362,7 +388,7 @@ public class GUI {
     private void tableEditChanged(TableModelEvent event) {
 
         int selectedRow = edgesTable.getSelectedRow();
-        if(selectedRow < 0) return;
+        if (selectedRow < 0) return;
         Edge edge = edges[selectedRow];
         if (!isCompleteRow(selectedRow)) {
             removeEdgeFromGraph(edge, selectedRow);
