@@ -127,6 +127,7 @@ public class GUI {
         JDialog jDialog = new JDialog();
         jDialog.setLayout(new GridBagLayout());
         jDialog.add(new JLabel("Please wait until test edge loads..."));
+        jDialog.setAlwaysOnTop(true);
         jDialog.setMinimumSize(new Dimension(200, 50));
         jDialog.setResizable(false);
         jDialog.setModal(false);
@@ -342,6 +343,19 @@ public class GUI {
 
 
     private void refreshComboBoxes() {
+
+        int startItem,endItem;
+        try {
+            startItem = getStartComboBoxValue();
+        }catch (Exception e){
+            startItem = -1;
+        }
+        try {
+            endItem = getEndComboBoxValue();
+        }catch (Exception e){
+            endItem = -1;
+        }
+
         endVertexCbx.removeAllItems();
         startVertexCbx.removeAllItems();
 
@@ -353,10 +367,13 @@ public class GUI {
                 ++siz;
             }
         }
-        if (siz > 1) {
+
+        startVertexCbx.setSelectedItem(String.valueOf(startItem));
+        endVertexCbx.setSelectedItem(String.valueOf(endItem));
+        /*if (siz > 1) {
             startVertexCbx.setSelectedIndex(0);
             endVertexCbx.setSelectedIndex(1);
-        }
+        }*/
 
     }
 
