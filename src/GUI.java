@@ -359,22 +359,14 @@ public class GUI {
         endVertexCbx.removeAllItems();
         startVertexCbx.removeAllItems();
 
-        int siz = 0;
         for (int i = 0; i < nodeFreq.length; ++i) {
             if (nodeFreq[i] > 0) {
                 endVertexCbx.addItem(String.valueOf(i));
                 startVertexCbx.addItem(String.valueOf(i));
-                ++siz;
             }
         }
-
         startVertexCbx.setSelectedItem(String.valueOf(startItem));
         endVertexCbx.setSelectedItem(String.valueOf(endItem));
-        /*if (siz > 1) {
-            startVertexCbx.setSelectedIndex(0);
-            endVertexCbx.setSelectedIndex(1);
-        }*/
-
     }
 
 
