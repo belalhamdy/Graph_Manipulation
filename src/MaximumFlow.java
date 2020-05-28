@@ -37,13 +37,13 @@ public class MaximumFlow implements IAlgorithm {
 
 
         while (queue.size() != 0) {
-            int u = queue.poll();
+            int curr = queue.poll();
 
-            for (int v = 0; v < Constants.MAX_VERTICES; v++) {
-                if (!visited[v] && residualGraph[u][v] > 0) {
-                    queue.add(v);
-                    parent[v] = u;
-                    visited[v] = true;
+            for (int i = 0; i < Constants.MAX_VERTICES; ++i) {
+                if (!visited[i] && residualGraph[curr][i] > 0) {
+                    queue.add(i);
+                    parent[i] = curr;
+                    visited[i] = true;
                 }
             }
         }
@@ -52,26 +52,26 @@ public class MaximumFlow implements IAlgorithm {
     }
 
     int fordFulkerson() {
-        int u, v;
-        int max_flow = 0;
+        int currStartNode;
+        int maxFlow = 0;
         while (bfs()) {
 
-            int path_flow = Integer.MAX_VALUE;
-            for (v = end; v != start; v = parent[v]) {
-                u = parent[v];
-                path_flow = Math.min(path_flow, residualGraph[u][v]);
+            int currPathFlow = Integer.MAX_VALUE;
+            for (int i = end; i != start; i = parent[i]) {
+                currStartNode = parent[i];
+                currPathFlow = Math.min(currPathFlow, residualGraph[currStartNode][i]);
             }
 
-            for (v = end; v != start; v = parent[v]) {
-                u = parent[v];
-                residualGraph[u][v] -= path_flow;
-                residualGraph[v][u] += path_flow;
+            for (int i = end; i != start; i = parent[i]) {
+                currStartNode = parent[i];
+                residualGraph[currStartNode][i] -= currPathFlow;
+                residualGraph[i][currStartNode] += currPathFlow;
             }
 
-            max_flow += path_flow;
+            maxFlow += currPathFlow;
         }
 
-        return max_flow;
+        return maxFlow;
     }
 
     // gets the nodes in path

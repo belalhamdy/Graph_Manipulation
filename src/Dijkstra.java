@@ -6,8 +6,8 @@ public class Dijkstra implements IAlgorithm {
     int[][] graph;
     int start, end;
 
-    int[] shortestDistances, parents;
-    boolean[] added;
+    int[] shortestDistances, parent;
+    boolean[] visited;
 
     int nVertices = Constants.MAX_VERTICES;
     Dijkstra(int[][] graph, int start, int end) {
@@ -17,41 +17,42 @@ public class Dijkstra implements IAlgorithm {
     }
 
     private void init() {
-        parents = new int[nVertices];
-        parents[start] = Constants.NO_PARENT;
-        Arrays.fill(parents,-1);
+        parent = new int[nVertices];
+        parent[start] = Constants.NO_PARENT;
+        Arrays.fill(parent,-1);
 
         shortestDistances = new int[nVertices];
-        added = new boolean[nVertices];
+        visited = new boolean[nVertices];
 
-        for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-            shortestDistances[vertexIndex] = Integer.MAX_VALUE;
-            added[vertexIndex] = false;
+        for (int i = 0; i < nVertices; ++i) {
+            shortestDistances[i] = Integer.MAX_VALUE;
+            visited[i] = false;
         }
 
         shortestDistances[start] = 0;
     }
 
     public void fillShortestDistancesArray() {
-        for (int i = 1; i < nVertices; i++) {
-            int nearestVertex = -1;
-            int shortestDistance = Integer.MAX_VALUE;
-            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-                if (!added[vertexIndex] && shortestDistances[vertexIndex] < shortestDistance) {
-                    nearestVertex = vertexIndex;
-                    shortestDistance = shortestDistances[vertexIndex];
+        for (int curr = 1; curr < nVertices; ++curr) {
+            int nearest = -1;
+            int minDistance = Integer.MAX_VALUE;
+            for (int i = 0; i < nVertices; ++i) {
+                if (!visited[i] && shortestDistances[i] < minDistance) {
+                    nearest = i;
+                    minDistance = shortestDistances[i];
                 }
             }
-            if (nearestVertex == -1) continue;
-            added[nearestVertex] = true;
 
-            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+            if (nearest == -1) continue;
+            visited[nearest] = true;
 
-                int edgeDistance = graph[nearestVertex][vertexIndex];
+            for (int i = 0; i < nVertices; ++i) {
 
-                if (edgeDistance > 0 && ((shortestDistance + edgeDistance) < shortestDistances[vertexIndex])) {
-                    parents[vertexIndex] = nearestVertex;
-                    shortestDistances[vertexIndex] = shortestDistance + edgeDistance;
+                int edgeDistance = graph[nearest][i];
+
+                if (edgeDistance > 0 && ((minDistance + edgeDistance) < shortestDistances[i])) {
+                    parent[i] = nearest;
+                    shortestDistances[i] = minDistance + edgeDistance;
                 }
             }
         }
@@ -63,7 +64,7 @@ public class Dijkstra implements IAlgorithm {
         if (currentVertex == Constants.NO_PARENT)
             return new ArrayList<>();
 
-        List<Integer> ret = getPathNodes(parents[currentVertex]);
+        List<Integer> ret = getPathNodes(parent[currentVertex]);
         ret.add(currentVertex);
         return ret;
     }
