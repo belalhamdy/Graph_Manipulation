@@ -34,6 +34,8 @@ public class GUI {
     private JScrollPane graphPnl;
     private JScrollPane edgesPnl;
     private JButton clearAllButton;
+    private JRadioButton allAtOnceRadioButton;
+    private JRadioButton stepByStepRadioButton;
 
     Graph<Node, Edge> g;
     VisualizationViewer<Node, Edge> vv;
@@ -79,13 +81,18 @@ public class GUI {
 
         clearAllButton.addActionListener(e -> clearAll());
 //        --------------------------------------------------------
-        ButtonGroup bG = new ButtonGroup();
-        bG.add(directedRadio);
-        bG.add(undirectedRadio);
+        ButtonGroup directionRadioGroup = new ButtonGroup();
+        directionRadioGroup.add(directedRadio);
+        directionRadioGroup.add(undirectedRadio);
         directedRadio.setSelected(true);
 
         directedRadio.addActionListener(e -> handleDirectedRadioChanges(true));
         undirectedRadio.addActionListener(e -> handleDirectedRadioChanges(false));
+//        --------------------------------------------------------
+        ButtonGroup representationRadioGroup = new ButtonGroup();
+        representationRadioGroup.add(allAtOnceRadioButton);
+        representationRadioGroup.add(stepByStepRadioButton);
+        allAtOnceRadioButton.setSelected(true);
 //        --------------------------------------------------------
         graphPnl.setMinimumSize(Constants.graphPnlDimension);
         graphPnl.setMaximumSize(Constants.graphPnlDimension);
@@ -105,9 +112,9 @@ public class GUI {
         dijkstraShortestPathButton.addActionListener(e -> handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.DIJKSTRA));
         fordFulkersonMaximumFlowButton.addActionListener(e -> handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType.MAXIMUM_FLOW));
 //        --------------------------------------------------------
+        initComboBoxes();
         initTable();
         initNodesAndEdges();
-        initComboBoxes();
         initGraph();
         //buttonsVisibility(false);
     }
@@ -314,11 +321,17 @@ public class GUI {
                 message = "Maximum Flow by Ford-Fulkerson is: " + solution.solutionCost;
                 break;
         }
-
-        setListOfNodesVisited(solution.nodes);
         resultsTxt.setText(message);
-    }
 
+        if(allAtOnceRadioButton.isSelected()) handleAllAtOnceRepresentation(solution);
+        else if (stepByStepRadioButton.isSelected()) handleStepByStepRepresentation(solution);
+    }
+    private void handleStepByStepRepresentation(Solution solution){
+        // TODO
+    }
+    private void handleAllAtOnceRepresentation(Solution solution){
+        setListOfNodesVisited(solution.nodes);
+    }
     private void clearNodesColors() {
         for (Node curr : nodes) curr.unsetVisited();
     }
