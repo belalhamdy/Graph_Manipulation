@@ -20,6 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GUI {
     private JPanel mainPnl;
@@ -44,8 +46,8 @@ public class GUI {
     Node testNode1 = new Node(1), testNode2 = new Node(2);
     Edge testEdge = new Edge(testNode1, testNode2, 0);
 
-    public static Node[] nodes;
-    Edge[] edges;
+    Node[] nodes;
+    Edge[] edges,edgesCpy;
     int[] nodeFreq;
 
     boolean isDirected = true;
@@ -155,7 +157,7 @@ public class GUI {
         layout.setSize(Constants.graphPnlDimension);
         vv = new VisualizationViewer<>(layout);
 
-        Transformer<Node, Paint> vertexColor = i -> i.color;
+        Transformer<Node, Paint> vertexColor = i -> vv.getPickedVertexState().isPicked(i) ? Constants.PICKED_NODE_COLOR : i.color;
 
         vv.setSize(Constants.graphPnlDimension); //Sets the viewing area size
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
@@ -215,10 +217,23 @@ public class GUI {
 
     }
 
-    private void clearAll() {
+    private void removeEdgeFromGraph(Edge e, int idx) {
+        if (e != null) {
+            g.removeEdge(e);
+            g.removeVertex(nodes[e.from]);
+            g.removeVertex(nodes[e.to]);
+        }
+        edges[idx] = null;
+    }
+
+    private void removeAllEdgesAndNodes() {
         for (int i = 0; i < edges.length; ++i) {
             removeEdgeFromGraph(edges[i], i);
         }
+    }
+
+    private void clearAll() {
+        removeAllEdgesAndNodes();
         for (int i = 0; i < edgesTable.getRowCount(); ++i) {
             edgesTable.setValueAt(null, i, 1);
             edgesTable.setValueAt(null, i, 2);
@@ -237,7 +252,8 @@ public class GUI {
     private int getStartComboBoxValue() throws Exception {
         if (startVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in start vertex.");
         String startItem = String.valueOf(startVertexCbx.getSelectedItem());
-        if (startItem.equals(Constants.initialComboBoxText)) throw new Exception("Please enter edges in the table to start.");
+        if (startItem.equals(Constants.initialComboBoxText))
+            throw new Exception("Please enter edges in the table to start.");
         try {
             return Integer.parseInt(startItem);
         } catch (Exception e) {
@@ -248,7 +264,8 @@ public class GUI {
     private int getEndComboBoxValue() throws Exception {
         if (endVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in end vertex.");
         String endItem = String.valueOf(endVertexCbx.getSelectedItem());
-        if (endItem.equals(Constants.initialComboBoxText)) throw new Exception("Please enter edges in the table to start.");
+        if (endItem.equals(Constants.initialComboBoxText))
+            throw new Exception("Please enter edges in the table to start.");
         try {
             return Integer.parseInt(endItem);
         } catch (Exception e) {
@@ -292,6 +309,7 @@ public class GUI {
     }
 
     private void handleAlgorithmExecution(AlgorithmsHandler.AlgorithmType algorithmType) {
+        refreshGraph();
         Solution solution;
         try {
             int startVal = getStartComboBoxValue();
@@ -323,27 +341,69 @@ public class GUI {
         }
         resultsTxt.setText(message);
 
-        if(allAtOnceRadioButton.isSelected()) handleAllAtOnceRepresentation(solution);
-        else if (stepByStepRadioButton.isSelected()) handleStepByStepRepresentation(solution);
-    }
-    private void handleStepByStepRepresentation(Solution solution){
-        // TODO
-    }
-    private void handleAllAtOnceRepresentation(Solution solution){
         setListOfNodesVisited(solution.nodes);
+        if (stepByStepRadioButton.isSelected()) handleStepByStepRepresentation(solution);
     }
+
+
+    private void handleStepByStepRepresentation(Solution solution) {
+        edgesCpy = edges.clone();
+        removeAllEdgesAndNodes();
+        java.util.Timer timer = new Timer();
+        timer.schedule(new addEdgesTimer(solution.edges), 1000, 1000);
+    }
+    public class addEdgesTimer extends TimerTask {
+        List<Edge> edgeList;
+        int currIndex;
+        boolean done;
+
+        addEdgesTimer(List<Edge> edgeList) {
+            this.edgeList = edgeList;
+            currIndex = 0;
+            done = false;
+        }
+
+        void addNextEdge() {
+            if (currIndex >= edgeList.size()) {
+                done = true;
+                return;
+            }
+
+            Edge currEdge = edgeList.get(currIndex);
+            Node from = nodes[currEdge.from], to = nodes[currEdge.to];
+
+            edges[currIndex] = new Edge(from, to, currEdge.cost);
+            Edge curr = edges[currIndex];
+            g.addEdge(curr, nodes[curr.from], nodes[curr.to], isDirected ? EdgeType.DIRECTED : EdgeType.UNDIRECTED);
+
+            vv.getRenderContext().getPickedVertexState().clear();
+            vv.getRenderContext().getPickedEdgeState().clear();
+            vv.getRenderContext().getPickedVertexState().pick(from, true);
+            vv.getRenderContext().getPickedVertexState().pick(to, true);
+            vv.getRenderContext().getPickedEdgeState().pick(edges[currIndex], true);
+            vv.repaint();
+
+            ++currIndex;
+        }
+
+        @Override
+        public void run() {
+            addNextEdge();
+            if (done) {
+                vv.getRenderContext().getPickedVertexState().clear();
+                vv.getRenderContext().getPickedEdgeState().clear();
+
+                edges = edgesCpy.clone();
+                cancel();
+            }
+        }
+    }
+
+
     private void clearNodesColors() {
         for (Node curr : nodes) curr.unsetVisited();
     }
 
-    private void removeEdgeFromGraph(Edge e, int idx) {
-        if (e != null) {
-            g.removeEdge(e);
-            g.removeVertex(nodes[e.from]);
-            g.removeVertex(nodes[e.to]);
-        }
-        edges[idx] = null;
-    }
 
     private void setListOfNodesVisited(List<Integer> nodesIndices) {
         int startVal, endVal;
@@ -365,15 +425,15 @@ public class GUI {
 
     private void refreshComboBoxes() {
 
-        int startItem,endItem;
+        int startItem, endItem;
         try {
             startItem = getStartComboBoxValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             startItem = -1;
         }
         try {
             endItem = getEndComboBoxValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             endItem = -1;
         }
 
@@ -394,7 +454,7 @@ public class GUI {
     // ---------------------------------------------------------------
     private void initTable() {
         edgesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        DefaultTableModel tableModel = new DefaultTableModel(null,columns) {
+        DefaultTableModel tableModel = new DefaultTableModel(null, columns) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column != 0;

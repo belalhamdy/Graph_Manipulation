@@ -73,7 +73,7 @@ public class Dijkstra implements IAlgorithm {
     private List<Edge> getVisitedEdges(List<Integer> visitedNodes) {
         List<Edge> ret = new ArrayList<>();
         for(int i = 0 ; i < visitedNodes.size() - 1 ; ++i){
-            ret.add(new Edge(GUI.nodes[visitedNodes.get(i)],GUI.nodes[visitedNodes.get(i+1)],graph[i][i+1]));
+            ret.add(new Edge(visitedNodes.get(i),visitedNodes.get(i+1),graph[visitedNodes.get(i)][visitedNodes.get(i+1)]));
         }
         return ret;
     }

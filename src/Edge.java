@@ -8,6 +8,12 @@ public class Edge {
         this.to = to.getValue();
         this.cost = cost;
     }
+    Edge(int from, int to, int cost) {
+        this.from = from;
+        this.to = to;
+        this.cost = cost;
+    }
+
 
 
 

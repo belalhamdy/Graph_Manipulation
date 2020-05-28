@@ -99,7 +99,7 @@ public class MaximumFlow implements IAlgorithm {
         for (int i = 0; i < Constants.MAX_VERTICES; ++i) {
             for (int j = 0; j < Constants.MAX_VERTICES; ++j) {
                 if (graph[i][j] - residualGraph[i][j] > 0)
-                    ret.add(new Edge(GUI.nodes[i],GUI.nodes[j],graph[i][j]));
+                    ret.add(new Edge(i,j,graph[i][j]));
             }
         }
         return ret;
