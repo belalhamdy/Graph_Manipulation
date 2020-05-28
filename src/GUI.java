@@ -177,8 +177,8 @@ public class GUI {
 
 
         //----------------------------------------------------
-        testNode1.color = Color.ORANGE;
-        testNode2.color = Color.ORANGE;
+        testNode1.color = Color.BLACK;
+        testNode2.color = Color.BLACK;
         g.addEdge(testEdge, testNode2, testNode1);
         layout = new CircleLayout<>(g);
         vv.setGraphLayout(layout);
@@ -347,10 +347,16 @@ public class GUI {
 
 
     private void handleStepByStepRepresentation(Solution solution) {
-        edgesCpy = edges.clone();
-        removeAllEdgesAndNodes();
-        java.util.Timer timer = new Timer();
-        timer.schedule(new addEdgesTimer(solution.edges), 1000, 1000);
+        int delayPeriod = 1000;
+        int estimatedTime = ((solution.edges.size() + 1) * delayPeriod )/ 1000;
+        int dialogResult = JOptionPane.showConfirmDialog (null, "The Estimated time for showing step by step is: " + estimatedTime + " seconds, Would you like to proceed? ","Warning",JOptionPane.YES_NO_OPTION);
+        if(dialogResult == JOptionPane.YES_OPTION){
+            mainPnl.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            edgesCpy = edges.clone();
+            removeAllEdgesAndNodes();
+            java.util.Timer timer = new Timer();
+            timer.schedule(new addEdgesTimer(solution.edges), delayPeriod, delayPeriod);
+        }
     }
     public class addEdgesTimer extends TimerTask {
         List<Edge> edgeList;
@@ -394,6 +400,7 @@ public class GUI {
                 vv.getRenderContext().getPickedEdgeState().clear();
 
                 edges = edgesCpy.clone();
+                mainPnl.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 cancel();
             }
         }
