@@ -18,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class GUI {
     Node testNode1 = new Node(1), testNode2 = new Node(2);
     Edge testEdge = new Edge(testNode1, testNode2, 0);
 
-    Node[] nodes;
+    public static Node[] nodes;
     Edge[] edges;
     int[] nodeFreq;
 
@@ -108,8 +107,14 @@ public class GUI {
 //        --------------------------------------------------------
         initTable();
         initNodesAndEdges();
+        initComboBoxes();
         initGraph();
         //buttonsVisibility(false);
+    }
+
+    private void initComboBoxes() {
+        startVertexCbx.addItem(Constants.initialComboBoxText);
+        endVertexCbx.addItem(Constants.initialComboBoxText);
     }
 
 
@@ -147,7 +152,7 @@ public class GUI {
 
         vv.setSize(Constants.graphPnlDimension); //Sets the viewing area size
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
-        vv.getRenderContext().setEdgeLabelTransformer(s -> s == testEdge ? "Test Edge" : String.valueOf(s.cost));
+        vv.getRenderContext().setEdgeLabelTransformer(s -> s == testEdge ? "Initial Test Edge" : String.valueOf(s.cost));
         vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
 
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<>());
@@ -212,6 +217,7 @@ public class GUI {
             edgesTable.setValueAt(null, i, 2);
             edgesTable.setValueAt(null, i, 3);
         }
+        resultsTxt.setText("");
         refreshGraph();
     }
 
@@ -224,6 +230,7 @@ public class GUI {
     private int getStartComboBoxValue() throws Exception {
         if (startVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in start vertex.");
         String startItem = String.valueOf(startVertexCbx.getSelectedItem());
+        if (startItem.equals(Constants.initialComboBoxText)) throw new Exception("Please enter edges in the table to start.");
         try {
             return Integer.parseInt(startItem);
         } catch (Exception e) {
@@ -233,9 +240,10 @@ public class GUI {
 
     private int getEndComboBoxValue() throws Exception {
         if (endVertexCbx.getSelectedItem() == null) throw new Exception("No value is selected in end vertex.");
-        String startItem = String.valueOf(endVertexCbx.getSelectedItem());
+        String endItem = String.valueOf(endVertexCbx.getSelectedItem());
+        if (endItem.equals(Constants.initialComboBoxText)) throw new Exception("Please enter edges in the table to start.");
         try {
-            return Integer.parseInt(startItem);
+            return Integer.parseInt(endItem);
         } catch (Exception e) {
             throw new Exception("Unsupported datatype in end vertex");
         }

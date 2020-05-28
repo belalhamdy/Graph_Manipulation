@@ -15,6 +15,8 @@ public class Constants {
     public static final Dimension graphPnlDimension = new Dimension(500,650);
     public static final Dimension comboBoxDimension = new Dimension(100,30);
 
+    public static final String initialComboBoxText = "Initial";
+
 
 
 }

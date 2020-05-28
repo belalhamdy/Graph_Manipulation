@@ -94,11 +94,23 @@ public class MaximumFlow implements IAlgorithm {
         }
         return ret;
     }
+    private List<Edge> getVisitedEdges(List<Integer> visitedNodes) {
+        List<Edge> ret = new ArrayList<>();
+        for (int i = 0; i < Constants.MAX_VERTICES; ++i) {
+            for (int j = 0; j < Constants.MAX_VERTICES; ++j) {
+                if (graph[i][j] - residualGraph[i][j] > 0)
+                    ret.add(new Edge(GUI.nodes[i],GUI.nodes[j],graph[i][j]));
+            }
+        }
+        return ret;
+    }
 
     @Override
     public Solution getSolution() {
         init();
         int maxFlow = fordFulkerson();
-        return new Solution(getPathNodes(), maxFlow);
+        List<Integer> visitedNodes = getPathNodes();
+        List<Edge> visitedEdges = getVisitedEdges(visitedNodes);
+        return new Solution(visitedNodes,visitedEdges, maxFlow);
     }
 }

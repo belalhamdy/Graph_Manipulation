@@ -10,6 +10,7 @@ public class Dijkstra implements IAlgorithm {
     boolean[] visited;
 
     int nVertices = Constants.MAX_VERTICES;
+
     Dijkstra(int[][] graph, int start, int end) {
         this.graph = graph;
         this.start = start;
@@ -19,7 +20,7 @@ public class Dijkstra implements IAlgorithm {
     private void init() {
         parent = new int[nVertices];
         parent[start] = Constants.NO_PARENT;
-        Arrays.fill(parent,-1);
+        Arrays.fill(parent, -1);
 
         shortestDistances = new int[nVertices];
         visited = new boolean[nVertices];
@@ -69,10 +70,20 @@ public class Dijkstra implements IAlgorithm {
         return ret;
     }
 
+    private List<Edge> getVisitedEdges(List<Integer> visitedNodes) {
+        List<Edge> ret = new ArrayList<>();
+        for(int i = 0 ; i < visitedNodes.size() - 1 ; ++i){
+            ret.add(new Edge(GUI.nodes[visitedNodes.get(i)],GUI.nodes[visitedNodes.get(i+1)],graph[i][i+1]));
+        }
+        return ret;
+    }
+
     @Override
     public Solution getSolution() {
         init();
         fillShortestDistancesArray();
-        return new Solution(getPathNodes(end), shortestDistances[end]);
+        List<Integer> visitedNodes = getPathNodes(end);
+        List<Edge> visitedEdges = getVisitedEdges(visitedNodes);
+        return new Solution(visitedNodes, visitedEdges, shortestDistances[end]);
     }
 }
