@@ -47,7 +47,7 @@ public class GUI {
     Edge testEdge = new Edge(testNode1, testNode2, 0);
 
     Node[] nodes;
-    Edge[] edges,edgesCpy;
+    Edge[] edges, edgesCpy;
     int[] nodeFreq;
 
     boolean isDirected = true;
@@ -158,11 +158,13 @@ public class GUI {
         vv = new VisualizationViewer<>(layout);
 
         Transformer<Node, Paint> vertexColor = i -> vv.getPickedVertexState().isPicked(i) ? Constants.PICKED_NODE_COLOR : i.color;
+        Transformer<Edge, Paint> EdgeColor = i -> vv.getPickedEdgeState().isPicked(i) ? Constants.PICKED_EDGE_COLOR : Constants.NORMAL_EDGE_COLOR;
 
         vv.setSize(Constants.graphPnlDimension); //Sets the viewing area size
         vv.getRenderContext().setVertexLabelTransformer(String::valueOf);
         vv.getRenderContext().setEdgeLabelTransformer(s -> s == testEdge ? "Initial Test Edge" : String.valueOf(s.cost));
         vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
+        vv.getRenderContext().setEdgeDrawPaintTransformer(EdgeColor);
 
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<>());
 
@@ -348,9 +350,9 @@ public class GUI {
 
     private void handleStepByStepRepresentation(Solution solution) {
         int delayPeriod = 1000;
-        int estimatedTime = ((solution.edges.size() + 1) * delayPeriod )/ 1000;
-        int dialogResult = JOptionPane.showConfirmDialog (null, "The Estimated time for showing step by step is: " + estimatedTime + " seconds, Would you like to proceed? ","Warning",JOptionPane.YES_NO_OPTION);
-        if(dialogResult == JOptionPane.YES_OPTION){
+        int estimatedTime = ((solution.edges.size() + 1) * delayPeriod) / 1000;
+        int dialogResult = JOptionPane.showConfirmDialog(null, "The Estimated time for showing step by step is: " + estimatedTime + " seconds, Would you like to proceed? ", "Warning", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION) {
             mainPnl.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             edgesCpy = edges.clone();
             removeAllEdgesAndNodes();
@@ -358,6 +360,7 @@ public class GUI {
             timer.schedule(new addEdgesTimer(solution.edges), delayPeriod, delayPeriod);
         }
     }
+
     public class addEdgesTimer extends TimerTask {
         List<Edge> edgeList;
         int currIndex;
