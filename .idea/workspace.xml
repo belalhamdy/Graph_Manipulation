@@ -106,7 +106,7 @@
       <workItem from="1589927879691" duration="2350000" />
       <workItem from="1590014624858" duration="2423000" />
       <workItem from="1590647273494" duration="363000" />
-      <workItem from="1590679380016" duration="9103000" />
+      <workItem from="1590679380016" duration="9791000" />
     </task>
     <task id="LOCAL-00001" summary="Added Utilities Functions">
       <created>1589348616515</created>
@@ -332,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590689280826</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Added step by step execution">
+      <created>1590690557330</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1590690557331</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -375,10 +382,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="551" y="218" key="#com.intellij.uiDesigner.palette.ComponentItemDialog/0.0.1536.824@0.0.1536.824" timestamp="1589666312293" />
-    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1590689279670">
+    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1590690556197">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590689279670" />
+    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590690556197" />
     <state x="147" y="65" key="DiffContextDialog" timestamp="1589928333206">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -431,10 +438,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1589819616824" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590689282092">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590690559210">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590689282092" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590690559210" />
     <state x="475" y="41" key="refactoring.ChangeSignatureDialog" timestamp="1589525649728">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

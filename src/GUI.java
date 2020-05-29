@@ -349,15 +349,14 @@ public class GUI {
 
 
     private void handleStepByStepRepresentation(Solution solution) {
-        int delayPeriod = 1000;
-        int estimatedTime = ((solution.edges.size() + 1) * delayPeriod) / 1000;
+        int estimatedTime = ((solution.edges.size() + 1) * Constants.DELAY_PERIOD) / 1000;
         int dialogResult = JOptionPane.showConfirmDialog(null, "The Estimated time for showing step by step is: " + estimatedTime + " seconds, Would you like to proceed? ", "Warning", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
             mainPnl.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             edgesCpy = edges.clone();
             removeAllEdgesAndNodes();
             java.util.Timer timer = new Timer();
-            timer.schedule(new addEdgesTimer(solution.edges), delayPeriod, delayPeriod);
+            timer.schedule(new addEdgesTimer(solution.edges), Constants.DELAY_PERIOD, Constants.DELAY_PERIOD);
         }
     }
 
