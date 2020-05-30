@@ -57,7 +57,7 @@ public class GUI {
 
     public GUI() {
         JFrame form = new JFrame("Graph Manipulation");
-        form.setMinimumSize(new Dimension(1150, 800));
+        form.setMinimumSize(Constants.mainFormDimension);
         form.setResizable(false);
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
@@ -138,6 +138,7 @@ public class GUI {
     }
 
     private void initGraph() {
+        mainPnl.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         JDialog jDialog = new JDialog();
         jDialog.setLayout(new GridBagLayout());
         jDialog.add(new JLabel("Please wait until test edge loads..."));
@@ -187,6 +188,7 @@ public class GUI {
         vv.repaint();
         //----------------------------------------------------
         jDialog.setVisible(false);
+        mainPnl.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         //vv.getPickedVertexState().isPicked(); // you will need it
     }
