@@ -58,7 +58,7 @@ public class GUI {
     public GUI() {
         JFrame form = new JFrame("Graph Manipulation");
         form.setMinimumSize(Constants.mainFormDimension);
-        form.setResizable(false);
+        //form.setResizable(false);
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setContentPane(mainPnl);
         form.pack();

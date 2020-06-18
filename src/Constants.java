@@ -21,5 +21,5 @@ public class Constants {
     public static final String initialComboBoxText = "Initial";
 
 
-    public static final int DELAY_PERIOD = 1000; // in milliseconds
+    public static final int DELAY_PERIOD = 5000; // in milliseconds
 }
