@@ -7,18 +7,6 @@ public class CreditsSplashScreen {
     private JPanel panel1;
     private JButton startButton;
     private JTextArea textArea;
-    private final String creditsText = "Graph Manipulation Program." +
-            "\nThis Program is created by Faculty of Computers and Artificial Intelligence Cairo University Students." +
-            "\nThe application manipulates different types of graphs like directed and undirected ones." +
-            "\nAlso it supports Dijkstra and Maximum Flow Algorithms."+
-            "\n--------------------------------------------" +
-            "\nContributors:" +
-            "\nBelal Hamdy Ezzat" +
-            "\nAhmed Nasr El Dardery" +
-            "\nSara Samer" +
-            "\nSalma Salama" +
-            "\n--------------------------------------------" +
-            "\nPublished at 18th of June 2020.";
     JFrame form;
     CreditsSplashScreen(){
         form = new JFrame("Credits");
@@ -40,6 +28,19 @@ public class CreditsSplashScreen {
             form.dispose();
         });
 //        --------------------------------------------------------
+        String creditsText = "Graph Manipulation Program." +
+                "\nThis Program is created by Faculty of Computers and Artificial Intelligence Cairo University Students." +
+                "\nThe application manipulates different types of graphs like directed and undirected ones." +
+                "\nAlso it supports Dijkstra and Maximum Flow Algorithms." +
+                "\n--------------------------------------------" +
+                "\nContributors:" +
+                "\nBelal Hamdy Ezzat" +
+                "\nAhmed Nasr El Dardery" +
+                "\nSara Samer" +
+                "\nSalma Salama" +
+                "\n--------------------------------------------" +
+                "\nPublished at 18th of June 2020.";
         textArea.setText(creditsText);
+//        --------------------------------------------------------
     }
 }

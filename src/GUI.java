@@ -38,7 +38,7 @@ public class GUI {
     private JButton clearAllButton;
     private JRadioButton allAtOnceRadioButton;
     private JRadioButton stepByStepRadioButton;
-
+    private JFrame form;
     Graph<Node, Edge> g;
     VisualizationViewer<Node, Edge> vv;
     Layout<Node, Edge> layout;
@@ -56,7 +56,7 @@ public class GUI {
     };
 
     public GUI() {
-        JFrame form = new JFrame("Graph Manipulation");
+        form = new JFrame("Graph Manipulation");
         form.setMinimumSize(Constants.mainFormDimension);
         //form.setResizable(false);
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
