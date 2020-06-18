@@ -18,7 +18,7 @@ public class CreditsSplashScreen {
             "\nSara Samer" +
             "\nSalma Salama" +
             "\n--------------------------------------------" +
-            "\nPublished in 18th of June 2020.";
+            "\nPublished at 18th of June 2020.";
     JFrame form;
     CreditsSplashScreen(){
         form = new JFrame("Credits");
